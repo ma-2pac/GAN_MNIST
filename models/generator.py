@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 
 class Generator(nn.Module):
     # nn.module is the base class of all NN modules

@@ -1,7 +1,7 @@
 ## Generator
 - Series of tranpose convultional layers
 - Output: Sigmoid activation function
-- Input: image of 28x28x1 as the output is a greyscale image
+- Input: image of 28x28x1 as the output is a greyscale image, z = latent dimension
 
 
 -Batch normlization
