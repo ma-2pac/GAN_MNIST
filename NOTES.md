@@ -17,3 +17,6 @@
         - stride =1
 
 
+## Discriminator
+- Series of convultional layers that are normlised and activated with Leaky ReLU
+- Output: Value between 0 and 1
