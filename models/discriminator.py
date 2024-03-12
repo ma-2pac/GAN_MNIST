@@ -8,20 +8,24 @@ class Discriminator(nn.Module):
         layer_filters = [32,64,128,256] # number of filters in each layer
 
         self.block1 = nn.Sequential(
+            nn.Conv2d(in_channels=1, out_channels=layer_filters[0], kernel_size=kernel_size, stride=2, padding=2),
             nn.LeakyReLU(0.2),
-            nn.Conv2d(in_channels=1, out_channels=layer_filters[0], kernel_size=kernel_size, stride=2, padding=2)
+            nn.Dropout(0.3)  # Adding dropout with a dropout rate of 0.3
         )
         self.block2 = nn.Sequential(
+            nn.Conv2d(in_channels=layer_filters[0], out_channels=layer_filters[1], kernel_size=kernel_size, stride=2, padding=2),
             nn.LeakyReLU(0.2),
-            nn.Conv2d(in_channels=layer_filters[0], out_channels=layer_filters[1], kernel_size=kernel_size, stride=2, padding=2)
+            nn.Dropout(0.3)  # Adding dropout with a dropout rate of 0.3
         )
         self.block3 = nn.Sequential(
+            nn.Conv2d(in_channels=layer_filters[1], out_channels=layer_filters[2], kernel_size=kernel_size, stride=2, padding=2),
             nn.LeakyReLU(0.2),
-            nn.Conv2d(in_channels=layer_filters[1], out_channels=layer_filters[2], kernel_size=kernel_size, stride=2, padding=2)
+            nn.Dropout(0.3)  # Adding dropout with a dropout rate of 0.3
         )
         self.block4 = nn.Sequential(
+            nn.Conv2d(in_channels=layer_filters[2], out_channels=layer_filters[3], kernel_size=kernel_size, stride=1, padding=2),
             nn.LeakyReLU(0.2),
-            nn.Conv2d(in_channels=layer_filters[2], out_channels=layer_filters[3], kernel_size=kernel_size, stride=2, padding=2)
+            nn.Dropout(0.3)  # Adding dropout with a dropout rate of 0.3
         )
         self.fc = nn.Linear(4 * 4 * layer_filters[3], 1)
 

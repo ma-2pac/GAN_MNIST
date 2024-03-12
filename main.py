@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import torchvision.utils as vutils
 import torch
 import torch.nn as nn
+import numpy as np
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -42,8 +43,12 @@ def train(generator, discriminator,gan, trainloader, epochs=50):
     lr = 2e-4 #learning rate
     decay = 6e-8 # weight decay
     factor = 0.5 # factor by which the learning rate will be reduced
-    optimizer_g = torch.optim.RMSprop(generator.parameters(), lr=lr*factor, weight_decay=decay*factor) # RMSprop optimizer
-    optimizer_d = torch.optim.RMSprop(discriminator.parameters(), lr=lr, weight_decay=decay)
+    #optimizer_g = torch.optim.RMSprop(generator.parameters(), lr=lr*factor, weight_decay=decay*factor) # RMSprop optimizer
+    #optimizer_d = torch.optim.RMSprop(discriminator.parameters(), lr=lr*factor, weight_decay=decay*factor)
+    
+    # Setup Adam optimizers for both G and D
+    optimizer_d = torch.optim.Adam(discriminator.parameters(), lr=lr, betas=(0.5, 0.999))
+    optimizer_g = torch.optim.Adam(generator.parameters(), lr=lr, betas=(0.5, 0.999))
 
 
     #training loop
@@ -82,7 +87,19 @@ def train(generator, discriminator,gan, trainloader, epochs=50):
             optimizer_g.step()
             if i % 100 == 0:
                 print(f'Epoch [{epoch}/{epochs}], Step [{i}/{len(trainloader)}], Loss D: {loss_d.item()}, Loss G: {loss_g.item()}')
+        print('Learning Rate (Generator):', optimizer_g.param_groups[0]['lr'])
+        print('Learning Rate (Discriminator):', optimizer_d.param_groups[0]['lr'])
+           
+        save_generated_img(generator,device,epoch=epoch)
 
-            print('Learning Rate (Generator):', optimizer_g.param_groups[0]['lr'])
-            print('Learning Rate (Discriminator):', optimizer_d.param_groups[0]['lr'])
-            save_generated_img(generator,device,epoch=epoch)
+
+#running the train loop
+latent_dim = 100
+generator = Generator(latent_dim).to(device)
+discriminator = Discriminator().to(device)
+print(generator)
+print(discriminator)
+gan = GAN(generator, discriminator).to(device)
+batch_size = 64
+epochs = 50
+train(generator, discriminator, gan, train_loader, epochs=epochs)
